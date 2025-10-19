@@ -3,7 +3,21 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-app.use(cors());
+
+const corsOptions = {
+  origin: [
+    'https://news-aggregator-frontend-3jhmpkf6j-gorkemcetinkaya35s-projects.vercel.app',
+    'https://news-aggregator-frontend-f8a6.vercel.app',
+    'http://localhost:3000',
+    'http://localhost:5173'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.post('/api/news', async (req, res) => {
