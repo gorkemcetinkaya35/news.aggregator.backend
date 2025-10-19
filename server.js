@@ -3,15 +3,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-
-// CORS configuration
-app.use(cors({
-  origin: ['https://news-aggregator-frontend-f8a6.vercel.app', 'http://localhost:3000', 'http://localhost:5173'],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type']
-}));
-
+app.use(cors());
 app.use(express.json());
 
 app.post('/api/news', async (req, res) => {
@@ -44,13 +36,13 @@ app.post('/api/news', async (req, res) => {
     if (articles.length === 0) return res.json({ news: [], topic, language });
 
     const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-    const langName = { 'tr': 'Türkçe', 'en': 'English', 'de': 'Deutsch' };
-    const lang = langName[language] || 'English';
+    const langName = { 'tr': 'Türkçe', 'en': 'İngilizce', 'de': 'Almanca' };
+    const lang = langName[language] || 'İngilizce';
 
     const news = [];
     for (const article of articles) {
       try {
-        const summaryPrompt = `Summarize this news in ${lang} with 6-8 sentences:\n\nTitle: ${article.title}\nDescription: ${article.description || 'N/A'}\n\nOnly write the summary.`;
+        const summaryPrompt = `Bu haberi ${lang}'de 6-8 cümle ile özetle:\n\nBaşlık: ${article.title}\nÖzet: ${article.description || 'N/A'}\n\nSadece özeti yaz.`;
         const summaryResponse = await fetch(geminiUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
